@@ -22,6 +22,6 @@ mongoose.connect(db, { useNewUrlParser: true })
     .then(() => console.log("CookBook Database is connected"))
     .catch(err => console.log(err));
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 3001;
 
 app.listen(port, () => console.log(`Server is running on port ${port} 🌎 !!`));
