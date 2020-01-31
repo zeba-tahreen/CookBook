@@ -1,39 +1,60 @@
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { loginUser } from "../../actions/authActions";
+import classnames from "classnames";
 import {Layout} from '../style/Style';
 import style from 'styled-components';
 import { Label, Input, Button, Row, Form } from 'reactstrap';
-// import API
-import API from '../../utils/API';
 
 class Login extends Component {
     constructor() {
-        super();
-        this.state = {
-            email: '',
-            password: '',
-            redirect: false,
-            errors:{}
-        }
+      super();
+      this.state = {
+        email: "",
+        password: "",
+        errors: {}
+      };
     }
+  
+    componentDidMount() {
+      // If logged in and user navigates to Login page, should redirect them to dashboard
+      if (this.props.auth.isAuthenticated) {
+        this.props.history.push("/dashboard");
+      }
+    }
+  
+    UNSAFE_componentWillReceiveProps(nextProps) {
+      if (nextProps.auth.isAuthenticated) {
+        this.props.history.push("/dashboard");
+      }
+  
+      if (nextProps.errors) {
+        this.setState({
+          errors: nextProps.errors
+        });
+      }
+    }
+  
     onChange = e => {
-        this.setState({ [ e.target.id]: e.target.value});
-    }
-
+      this.setState({ [e.target.id]: e.target.value });
+    };
+  
     onSubmit = e => {
-        e.preventDefault();
-        const userData ={
-            email: this.state.email,
-            password: this.state.password
-        }
-        console.log(userData);
-    }
-
+      e.preventDefault();
+  
+      const userData = {
+        email: this.state.email,
+        password: this.state.password
+      };
+  
+      this.props.loginUser(userData);
+    };
+  
     render() {
-        const { errors } = this.state;
-        if(this.state.loggedIn){
-            return <Redirect to="/recipe" />
-        }
+      const { errors } = this.state;
+          
         return (
             <Layout>
                 <Row style={{width:"100%"}}>
@@ -45,27 +66,34 @@ class Login extends Component {
                       </ColumnOne>
                <ColumnTwo>
               <div className="login-form" >
+                  <h4><b>Login</b> below</h4>
+                  <p>Don't have an account?
+                      <Link to="/register">Register</Link>
+                  </p>
               <Form noValidate onSubmit={this.onSubmit}>
-
                 <div className="userlogin">
-                    <Label className="userlable" htmlFor="name">Email</Label>
+                    <Label className="userlable" htmlFor="email">Email</Label>
+        <span className="red-text">{errors.email}{errors.emailnotfound}</span>
                     <Input
                         onChange={this.onChange}
                         value={this.state.email}
                         error = {errors.email}
                         id="email"
                         type="email"
+                        className={classnames("", {invalid: errors.email || errors.emailnotfound})}
                         placeholder="example@gmail.com"
                         required />
                 </div>
                 <div className="userlogin" >
-                    <Label className="Userlabel" htmlFor="name">Password</Label>
+                    <Label className="Userlabel" htmlFor="password">Password</Label>
+                    <span className="red-text">{errors.password}{errors.passwordincorrect}</span>
                     <Input className="form-control"
                        onChange={this.onChange}
                        value={this.state.password}
                        error = {errors.password}
                        id="password"
                        type="password"
+                       className={classnames("", {invalid: errors.password || errors.passwordincorrect})}
                        placeholder="Enter Password"
                        required />
                 </div>
@@ -81,11 +109,28 @@ class Login extends Component {
                 </Row>
 
             </Layout>
-        )
+        );
     }
 
 }
-export default Login;
+
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(Login);
+
+
 const ColumnOne = style.div`
 width: 50%;
 padding:10%;
