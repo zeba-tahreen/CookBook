@@ -1,38 +1,54 @@
-import React, { Component } from 'react';
-// React router
-import{BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-// import react-bootstrap
+import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import jwt_decode from "jwt-decode";
+import setAuthToken from "./utils/setAuthToken";
+
+import { setCurrentUser, logoutUser } from "./actions/authActions";
+import { Provider } from "react-redux";
+import store from "./store";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import layouts
 import NavBar from './components/layouts/NavBar';
 import Footer from './components/layouts/Footer';
-// import pages
 import Main from './pages/home/Main';
-import Kitchen from './pages/recipe/Kitchen';
-import Recipe from './pages/recipe/Recipe';
-import NoMatch from './pages/home/NoMatch';
+
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
-// import DisplayRecipe from './pages/home/displayrecipe';
+import PrivateRoute from './pages/private-route/PrivateRoute';
+import Dashboard from './pages/dashboard/Dashboard';
+
+
+// Check for token to keep user logged in
+if (localStorage.jwtToken){
+  const token = localStorage.jwtToken; // set auth token header
+  setAuthToken(token);
+  const decoded = jwt_decode(token); // Decode token and get user info and exp
+  store.dispatch(setCurrentUser(decoded)); // Set user ans isAuthenticated
+  // check for expired token
+  const currentTime = Date.now() / 1000; // to get in milliseconds
+  if(decoded.exp < currentTime){
+    store.dispatch(logoutUser()); // Logout user
+    window.location.href = './login'; // Redirect to login
+  }
+}
 
 
 
 class App extends Component{
   render(){
     return(  
-      <Router>              
+      <Provider store={store}>
+        <Router>              
         <NavBar />
         <Switch>
           <Route exact path='/' component={Main}/>
-          <Route path='/kitchen' component={Kitchen}/>
-          <Route path='/recipe' component={Recipe}/>
-          {/* <Route path='/recipe/:info' component={DisplayRecipe}/> */}
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register}/> 
-          <Route component={NoMatch}/>
+          <PrivateRoute exact path='/dashboard' component={Dashboard} />
         </Switch>
         <Footer />
         </Router>
+      </Provider>
     )
   }
 }
