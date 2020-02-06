@@ -14,6 +14,7 @@ class Footer extends Component {
                         <div className="col-4 left">
                         <p><Link 
                             className="footer-contact text-white" 
+                            style={{textDecoration:"none"}}
                             to='/contact'
                             >Contact us&nbsp; 
                             <i className="far fa-envelope"></i>
@@ -50,6 +51,8 @@ const FooterContainer = style.footer`
      text-align: center;
      color: white;
      font-family: italic;
+
+     
 }
 
 `;

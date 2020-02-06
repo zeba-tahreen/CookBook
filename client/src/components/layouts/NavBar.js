@@ -109,6 +109,10 @@ const ListGroupItem = style.div`
    border:none;
    display:inline;
 
+   && :hover{
+       text-decoration:none;
+   }
+
    .nav-item{
        color:white;
    }

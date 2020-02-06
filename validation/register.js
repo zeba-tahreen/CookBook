@@ -10,20 +10,20 @@ module.exports = function validateRegisterInput(data) {
 
     //check name
     if (Validator.isEmpty(data.name)) {
-        errors.name = "Name field is required";
+        errors.name = " :   Name field is required";
     }
     // check email
     if (Validator.isEmpty(data.email)) {
-        errors.email = "Email field is required";
+        errors.email = " :   Email field is required";
     } else if (!Validator.isEmail(data.email)) {
-        errors.email = "Email is invalid";
+        errors.email = " :   Email is invalid";
     }
     // check password
     if (Validator.isEmpty.password){
-        errors.password = "Password field is required";
+        errors.password = " :   Password field is required";
     }
     if(!Validator.isLength(data.password,{min:6, max:30})){
-        errors.password = "Password must be at least 6 characters";
+        errors.password = " :   Password min 6 characters";
     }
     return{
         errors,
