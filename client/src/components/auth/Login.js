@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { loginUser } from "../../actions/authActions";
 import classnames from "classnames";
-import {Layout} from '../style/Style';
 import style from 'styled-components';
 import { Label, Input, Button, Row, Form } from 'reactstrap';
 
@@ -56,7 +55,6 @@ class Login extends Component {
       const { errors } = this.state;
           
         return (
-            <Layout>
                 <Row style={{width:"100%"}}>
                    <ColumnOne>
                    <div className="image-display">
@@ -108,7 +106,6 @@ class Login extends Component {
                </ColumnTwo>
                 </Row>
 
-            </Layout>
         );
     }
 
