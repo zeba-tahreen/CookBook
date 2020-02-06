@@ -16,6 +16,8 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import PrivateRoute from './pages/private-route/PrivateRoute';
 import Dashboard from './pages/dashboard/Dashboard';
+import Kitchen from "./pages/dashboard/Kitchen";
+import Contact from "./components/layouts/Contact";
 
 
 // Check for token to keep user logged in
@@ -44,7 +46,9 @@ class App extends Component{
           <Route exact path='/' component={Main}/>
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register}/> 
+          <Route path='/contact' component={Contact} />
           <PrivateRoute exact path='/dashboard' component={Dashboard} />
+          <PrivateRoute exact path='/kitchen' component={Kitchen} />
         </Switch>
         <Footer />
         </Router>
